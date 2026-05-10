@@ -55,3 +55,4 @@ temp_images_vib/
 .env*
 serviceAccountKey.json
 lib/src/constants/api_keys.dart
+AuthKey_*.p8

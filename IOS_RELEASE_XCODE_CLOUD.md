@@ -1,6 +1,6 @@
 # Hướng dẫn release iOS lên App Store Connect bằng Xcode Cloud
 
-Cập nhật: 2026-04-26
+Cập nhật: 2026-05-10
 
 Tài liệu này dành cho dự án Flutter `baothe_vn`, sau khi app đã chạy ổn trên simulator và cần chuẩn bị luồng release iOS qua App Store Connect, TestFlight và Xcode Cloud.
 
@@ -11,9 +11,10 @@ Tài liệu này dành cho dự án Flutter `baothe_vn`, sau khi app đã chạy
 | Flutter package | `baothe_vn` |
 | iOS workspace | `ios/Runner.xcworkspace` |
 | Scheme | `Runner` |
-| Bundle ID | `com.baothevn.app` |
-| Apple Team ID trong project | `87T9YDCVGH` |
+| Bundle ID | `com.baothe.app` |
+| Apple Team ID trong project | `5MNN7PQYBD` |
 | Version hiện tại | `1.0.0+1` trong `pubspec.yaml` |
+| App Store Connect app | `BaoThe`, Apple ID `6763936547`, SKU `baothevn-ios` |
 | Display name | `MyFiny` trong `Info.plist`, `My Finy` trong Xcode build setting |
 | iOS deployment target | `15.0` trong `Podfile`, một số setting của Runner đang là `16.6` |
 | Capability đang dùng | Push Notifications, Sign in with Apple |
@@ -22,7 +23,7 @@ Trước khi upload bản đầu tiên, nên chốt lại 3 điểm:
 
 1. Tên app hiển thị trên máy và tên trên App Store sẽ dùng `MyFiny`, `My Finy` hay tên thương hiệu khác.
 2. Minimum iOS support là `15.0` hay `16.6`; nên chỉnh đồng nhất trong Xcode target Runner và `ios/Podfile`.
-3. Bundle ID `com.baothevn.app` phải trùng trong Apple Developer, App Store Connect, Firebase iOS app và Xcode project.
+3. Bundle ID `com.baothe.app` phải trùng trong Apple Developer, App Store Connect, Firebase iOS app và Xcode project.
 
 ## 1. Điều kiện cần
 
@@ -66,7 +67,7 @@ ios/build/
 Vào Apple Developer > Certificates, Identifiers & Profiles > Identifiers và tạo hoặc kiểm tra App ID:
 
 ```text
-Bundle ID: com.baothevn.app
+Bundle ID: com.baothe.app
 Type: Explicit App ID
 ```
 
@@ -82,24 +83,24 @@ Nếu dùng Firebase Cloud Messaging cho thông báo, cần tạo APNs Auth Key 
 Trong Xcode, mở `ios/Runner.xcworkspace`, chọn target `Runner` > Signing & Capabilities:
 
 ```text
-Team: 87T9YDCVGH hoặc team Apple Developer thật của dự án
-Bundle Identifier: com.baothevn.app
+Team: 5MNN7PQYBD
+Bundle Identifier: com.baothe.app
 Automatically manage signing: bật
 ```
 
 Nếu team id hiện tại không phải team sẽ release app, đổi lại team trước khi archive hoặc cấu hình Xcode Cloud.
 
-## 3. Tạo app record trong App Store Connect
+## 3. App record trong App Store Connect
 
-Vào App Store Connect > My Apps > New App và nhập:
+App record hiện đã tồn tại trong App Store Connect:
 
 ```text
 Platform: iOS
-Name: MyFiny hoặc tên app chính thức
-Primary Language: Vietnamese hoặc English
-Bundle ID: com.baothevn.app
-SKU: baothevn-ios hoặc mã nội bộ bất kỳ, không trùng app khác
-User Access: Full Access hoặc giới hạn theo team
+Name: BaoThe
+Primary Language: Vietnamese
+Bundle ID: com.baothe.app
+SKU: baothevn-ios
+Apple ID: 6763936547
 ```
 
 Sau khi tạo app record, hoàn thiện các phần sau:
@@ -163,13 +164,27 @@ Vì workspace nằm ở `ios/Runner.xcworkspace`, tạo file:
 ios/ci_scripts/ci_post_clone.sh
 ```
 
-Nội dung đề xuất:
+Nội dung đang dùng trong repo:
 
 ```sh
 #!/bin/sh
 set -e
 
-cd "$CI_WORKSPACE"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+cd "$REPO_ROOT"
+
+if [ -z "${GEMINI_API_KEY:-}" ]; then
+  echo "error: Missing Xcode Cloud environment variable GEMINI_API_KEY"
+  exit 1
+fi
+
+mkdir -p lib/src/constants
+cat > lib/src/constants/api_keys.dart <<EOF
+class ApiKeys {
+  static const geminiApiKey = '$GEMINI_API_KEY';
+}
+EOF
 
 FLUTTER_HOME="$HOME/flutter"
 
@@ -183,11 +198,23 @@ flutter --version
 flutter pub get
 flutter precache --ios
 
+if ! command -v pod >/dev/null 2>&1; then
+  brew install cocoapods
+fi
+
 cd ios
-pod install
+pod install --repo-update
 ```
 
 Khuyến nghị: sau khi build ổn, thay `-b stable` bằng tag Flutter cụ thể đang dùng cho release để build có thể lặp lại ổn định hơn.
+
+Trong Xcode Cloud workflow, thêm Environment Variable dạng secret:
+
+```text
+GEMINI_API_KEY=<Gemini API key production>
+```
+
+Không commit `lib/src/constants/api_keys.dart`; file này được tạo tự động trong Xcode Cloud và đang nằm trong `.gitignore`.
 
 Trên macOS hoặc môi trường có Git executable bit, chạy:
 
@@ -217,7 +244,7 @@ Trên Mac có Xcode:
 4. Vào Product > Xcode Cloud > Create Workflow hoặc mở Xcode Cloud từ Report navigator.
 5. Chọn repository GitHub của dự án và branch `main`.
 6. Chọn product/scheme `Runner`.
-7. Chọn environment Xcode phù hợp với máy local đang build ổn.
+7. Chọn environment Xcode `26` hoặc mới hơn. App Store Connect hiện từ chối IPA build bằng iOS 18.5 SDK/Xcode 16.4.
 8. Workflow action nên gồm:
 
 ```text
@@ -257,7 +284,7 @@ Lưu ý: với Xcode Cloud, output chính là archive/build được đưa lên 
 
 ```text
 [ ] App chạy được trên thiết bị thật iPhone, không chỉ simulator.
-[ ] Google Sign-In hoạt động với bundle ID com.baothevn.app.
+[ ] Google Sign-In hoạt động với bundle ID com.baothe.app.
 [ ] Sign in with Apple hoạt động trên thiết bị thật.
 [ ] Push notification/Firebase Messaging hoạt động hoặc tắt nếu chưa dùng.
 [ ] App icon 1024x1024 không có alpha.
@@ -277,7 +304,7 @@ Lưu ý: với Xcode Cloud, output chính là archive/build được đưa lên 
 
 Xcode Cloud chưa chạy được `flutter pub get`. Kiểm tra file `ios/ci_scripts/ci_post_clone.sh`, executable bit và vị trí file phải nằm cạnh workspace `ios/Runner.xcworkspace`.
 
-`No profiles for com.baothevn.app were found`
+`No profiles for com.baothe.app were found`
 
 Bundle ID, team, capability hoặc automatic signing chưa khớp giữa Xcode project và Apple Developer.
 
