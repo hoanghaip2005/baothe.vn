@@ -66,10 +66,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBOlnz6ZgeOZ1JmKO4deGuIQDuoCzox3Dw',
-    appId: '1:1008690396766:ios:6e16f69b768a83dbf07ecf',
+    appId: '1:1008690396766:ios:b66a09d81c7bdd68f07ecf',
     messagingSenderId: '1008690396766',
     projectId: 'baothevn-790c6',
     storageBucket: 'baothevn-790c6.firebasestorage.app',
-    iosBundleId: 'com.example.baotheVn',
+    iosBundleId: 'com.baothe.app',
   );
 }

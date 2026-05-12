@@ -1,9 +1,29 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:crypto/crypto.dart';
 import 'firestore_service.dart';
+
+String _generateNonce([int length = 32]) {
+  const charset =
+      '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+  final random = Random.secure();
+  return List.generate(
+    length,
+    (_) => charset[random.nextInt(charset.length)],
+  ).join();
+}
+
+String _sha256ofString(String input) {
+  final bytes = utf8.encode(input);
+  final digest = sha256.convert(bytes);
+  return digest.toString();
+}
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -15,7 +35,11 @@ class AuthService {
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
   // Đăng ký tài khoản
-  Future<UserCredential> signUp(String email, String password, {String? fullName}) async {
+  Future<UserCredential> signUp(
+    String email,
+    String password, {
+    String? fullName,
+  }) async {
     final credential = await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
@@ -44,10 +68,12 @@ class AuthService {
   // Đăng nhập bằng Google
   Future<UserCredential?> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? expectedGoogleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAccount? expectedGoogleUser = await GoogleSignIn()
+          .signIn();
       if (expectedGoogleUser == null) return null;
 
-      final GoogleSignInAuthentication googleAuth = await expectedGoogleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await expectedGoogleUser.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -59,7 +85,12 @@ class AuthService {
         String? fullName = expectedGoogleUser.displayName;
         String? email = expectedGoogleUser.email;
         String? photoUrl = expectedGoogleUser.photoUrl;
-        await _firestoreService.saveUser(userCredential.user!, name: fullName, email: email, photoUrl: photoUrl);
+        await _firestoreService.saveUser(
+          userCredential.user!,
+          name: fullName,
+          email: email,
+          photoUrl: photoUrl,
+        );
       }
       return userCredential;
     } on PlatformException catch (e) {
@@ -75,27 +106,39 @@ class AuthService {
   // Đăng nhập bằng Apple
   Future<UserCredential?> signInWithApple() async {
     try {
-      final AuthorizationCredentialAppleID appleCredential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-      );
+      final rawNonce = _generateNonce();
+      final nonce = _sha256ofString(rawNonce);
+
+      final AuthorizationCredentialAppleID appleCredential =
+          await SignInWithApple.getAppleIDCredential(
+            scopes: [
+              AppleIDAuthorizationScopes.email,
+              AppleIDAuthorizationScopes.fullName,
+            ],
+            nonce: nonce,
+          );
 
       final OAuthProvider oAuthProvider = OAuthProvider('apple.com');
       final AuthCredential credential = oAuthProvider.credential(
         idToken: appleCredential.identityToken,
-        accessToken: appleCredential.authorizationCode,
+        rawNonce: rawNonce,
       );
 
       final userCredential = await _auth.signInWithCredential(credential);
       if (userCredential.user != null) {
         String? fullName;
-        if (appleCredential.givenName != null || appleCredential.familyName != null) {
-          fullName = '${appleCredential.familyName ?? ''} ${appleCredential.givenName ?? ''}'.trim();
+        if (appleCredential.givenName != null ||
+            appleCredential.familyName != null) {
+          fullName =
+              '${appleCredential.familyName ?? ''} ${appleCredential.givenName ?? ''}'
+                  .trim();
         }
         String? email = appleCredential.email;
-        await _firestoreService.saveUser(userCredential.user!, name: fullName, email: email);
+        await _firestoreService.saveUser(
+          userCredential.user!,
+          name: fullName,
+          email: email,
+        );
       }
       return userCredential;
     } catch (e) {
