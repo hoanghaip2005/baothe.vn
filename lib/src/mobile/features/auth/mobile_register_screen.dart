@@ -11,7 +11,8 @@ class MobileRegisterScreen extends ConsumerStatefulWidget {
   const MobileRegisterScreen({super.key});
 
   @override
-  ConsumerState<MobileRegisterScreen> createState() => _MobileRegisterScreenState();
+  ConsumerState<MobileRegisterScreen> createState() =>
+      _MobileRegisterScreenState();
 }
 
 class _MobileRegisterScreenState extends ConsumerState<MobileRegisterScreen> {
@@ -19,7 +20,7 @@ class _MobileRegisterScreenState extends ConsumerState<MobileRegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  
+
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
   bool _isLoading = false;
@@ -64,7 +65,7 @@ class _MobileRegisterScreenState extends ConsumerState<MobileRegisterScreen> {
       final authService = ref.read(authServiceProvider);
       await authService.signUp(email, password, fullName: name);
       if (mounted) {
-        context.go('/'); 
+        context.go('/');
       }
     } catch (e) {
       _showError(e.toString());
@@ -124,7 +125,11 @@ class _MobileRegisterScreenState extends ConsumerState<MobileRegisterScreen> {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Color(0xFFFFFFFF), Color(0xFFF3F4F6), Color(0xFFE5E7EB)],
+                colors: [
+                  Color(0xFFFFFFFF),
+                  Color(0xFFF3F4F6),
+                  Color(0xFFE5E7EB),
+                ],
               ),
             ),
           ),
@@ -138,7 +143,10 @@ class _MobileRegisterScreenState extends ConsumerState<MobileRegisterScreen> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.textPrimary),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: AppColors.textPrimary,
+                      ),
                       onPressed: () {
                         if (context.canPop()) {
                           context.pop();
@@ -152,8 +160,9 @@ class _MobileRegisterScreenState extends ConsumerState<MobileRegisterScreen> {
                   // Logo
                   Center(
                     child: Image.asset(
-                      'assets/logo/logo_app.png',
-                      height: 80,
+                      'assets/logo/baothevn.png',
+                      width: 220,
+                      fit: BoxFit.contain,
                     ).animate().fadeIn(duration: 800.ms).scale(delay: 200.ms),
                   ),
                   const SizedBox(height: 30),
@@ -186,7 +195,9 @@ class _MobileRegisterScreenState extends ConsumerState<MobileRegisterScreen> {
                     icon: Icons.lock_outline_rounded,
                     isPassword: true,
                     isVisible: _isPasswordVisible,
-                    onVisibilityChanged: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
+                    onVisibilityChanged: () => setState(
+                      () => _isPasswordVisible = !_isPasswordVisible,
+                    ),
                   ).animate().fadeIn(delay: 500.ms).slideX(begin: 0.1),
                   const SizedBox(height: 16),
                   _buildInputField(
@@ -195,40 +206,52 @@ class _MobileRegisterScreenState extends ConsumerState<MobileRegisterScreen> {
                     icon: Icons.lock_outline_rounded,
                     isPassword: true,
                     isVisible: _isConfirmPasswordVisible,
-                    onVisibilityChanged: () => setState(() => _isConfirmPasswordVisible = !_isConfirmPasswordVisible),
+                    onVisibilityChanged: () => setState(
+                      () => _isConfirmPasswordVisible =
+                          !_isConfirmPasswordVisible,
+                    ),
                   ).animate().fadeIn(delay: 550.ms).slideX(begin: 0.1),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Register Button
                   _buildPrimaryButton(
                     label: 'ĐĂNG KÝ',
                     onPressed: _isLoading ? null : _handleRegister,
                   ).animate().fadeIn(delay: 600.ms).scale(),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Divider
                   Row(
                     children: [
                       Expanded(child: Divider(color: Colors.grey.shade300)),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text('Đăng ký bằng mạng xã hội', style: GoogleFonts.inter(color: AppColors.textLight, fontSize: 13)),
+                        child: Text(
+                          'Đăng ký bằng mạng xã hội',
+                          style: GoogleFonts.inter(
+                            color: AppColors.textLight,
+                            fontSize: 13,
+                          ),
+                        ),
                       ),
                       Expanded(child: Divider(color: Colors.grey.shade300)),
                     ],
                   ).animate().fadeIn(delay: 700.ms),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Social Register Buttons
                   _SocialLoginButton(
-                    customIcon: Image.asset('assets/logo/google_logo.png', height: 24),
+                    customIcon: Image.asset(
+                      'assets/logo/google_logo.png',
+                      height: 24,
+                    ),
                     label: 'Tiếp tục với Google',
                     onPressed: _isLoading ? () {} : _handleGoogleSignIn,
                   ).animate().fadeIn(delay: 750.ms).slideY(begin: 0.1),
-                  
+
                   if (isIOS) ...[
                     const SizedBox(height: 16),
                     _SocialLoginButton(
@@ -237,16 +260,19 @@ class _MobileRegisterScreenState extends ConsumerState<MobileRegisterScreen> {
                       onPressed: _isLoading ? () {} : _handleAppleSignIn,
                     ).animate().fadeIn(delay: 800.ms).slideY(begin: 0.1),
                   ],
-                  
+
                   const SizedBox(height: 30),
-                  
+
                   // Footer -> go to login
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'Đã có tài khoản?',
-                        style: GoogleFonts.inter(color: AppColors.textSecondary, fontSize: 14),
+                        style: GoogleFonts.inter(
+                          color: AppColors.textSecondary,
+                          fontSize: 14,
+                        ),
                       ),
                       TextButton(
                         onPressed: () {
@@ -276,7 +302,9 @@ class _MobileRegisterScreenState extends ConsumerState<MobileRegisterScreen> {
             Container(
               color: Colors.black.withValues(alpha: 0.3),
               child: const Center(
-                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary)),
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                ),
               ),
             ),
         ],
@@ -298,7 +326,11 @@ class _MobileRegisterScreenState extends ConsumerState<MobileRegisterScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: TextField(
@@ -307,20 +339,30 @@ class _MobileRegisterScreenState extends ConsumerState<MobileRegisterScreen> {
         decoration: InputDecoration(
           icon: Icon(icon, color: AppColors.textLight, size: 20),
           labelText: label,
-          labelStyle: GoogleFonts.inter(fontSize: 14, color: AppColors.textSecondary),
+          labelStyle: GoogleFonts.inter(
+            fontSize: 14,
+            color: AppColors.textSecondary,
+          ),
           border: InputBorder.none,
-          suffixIcon: isPassword 
-            ? IconButton(
-                icon: Icon(isVisible ? Icons.visibility_off : Icons.visibility, color: AppColors.textLight, size: 20),
-                onPressed: onVisibilityChanged,
-              )
-            : null,
+          suffixIcon: isPassword
+              ? IconButton(
+                  icon: Icon(
+                    isVisible ? Icons.visibility_off : Icons.visibility,
+                    color: AppColors.textLight,
+                    size: 20,
+                  ),
+                  onPressed: onVisibilityChanged,
+                )
+              : null,
         ),
       ),
     );
   }
 
-  Widget _buildPrimaryButton({required String label, required VoidCallback? onPressed}) {
+  Widget _buildPrimaryButton({
+    required String label,
+    required VoidCallback? onPressed,
+  }) {
     return SizedBox(
       width: double.infinity,
       height: 56,
@@ -329,13 +371,20 @@ class _MobileRegisterScreenState extends ConsumerState<MobileRegisterScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.5),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           elevation: 2,
           shadowColor: AppColors.primary.withValues(alpha: 0.3),
         ),
         child: Text(
           label,
-          style: GoogleFonts.inter(fontWeight: FontWeight.bold, letterSpacing: 1, color: Colors.white, fontSize: 16),
+          style: GoogleFonts.inter(
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1,
+            color: Colors.white,
+            fontSize: 16,
+          ),
         ),
       ),
     );
@@ -348,7 +397,12 @@ class _SocialLoginButton extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
 
-  const _SocialLoginButton({this.icon, this.customIcon, required this.label, required this.onPressed});
+  const _SocialLoginButton({
+    this.icon,
+    this.customIcon,
+    required this.label,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -359,7 +413,9 @@ class _SocialLoginButton extends StatelessWidget {
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
           side: const BorderSide(color: Color(0xFFE5E7EB), width: 1.5),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           backgroundColor: Colors.white,
           foregroundColor: AppColors.textPrimary,
           elevation: 0,
@@ -375,7 +431,13 @@ class _SocialLoginButton extends StatelessWidget {
                 FaIcon(icon, size: 20),
             ],
             const SizedBox(width: 12),
-            Text(label, style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600)),
+            Text(
+              label,
+              style: GoogleFonts.inter(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ],
         ),
       ),

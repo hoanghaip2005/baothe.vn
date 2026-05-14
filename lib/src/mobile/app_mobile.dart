@@ -23,10 +23,18 @@ import '../models/user_card_model.dart';
 import 'mobile_main_layout.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final _shellNavigatorHomeKey = GlobalKey<NavigatorState>(debugLabel: 'shellHome');
-final _shellNavigatorWalletKey = GlobalKey<NavigatorState>(debugLabel: 'shellWallet');
-final _shellNavigatorCalendarKey = GlobalKey<NavigatorState>(debugLabel: 'shellCalendar');
-final _shellNavigatorProfileKey = GlobalKey<NavigatorState>(debugLabel: 'shellProfile');
+final _shellNavigatorHomeKey = GlobalKey<NavigatorState>(
+  debugLabel: 'shellHome',
+);
+final _shellNavigatorWalletKey = GlobalKey<NavigatorState>(
+  debugLabel: 'shellWallet',
+);
+final _shellNavigatorCalendarKey = GlobalKey<NavigatorState>(
+  debugLabel: 'shellCalendar',
+);
+final _shellNavigatorProfileKey = GlobalKey<NavigatorState>(
+  debugLabel: 'shellProfile',
+);
 
 final _mobileRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
@@ -142,7 +150,7 @@ class AppMobile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
-      title: 'MyFiny',
+      title: 'BaoThe',
       debugShowCheckedModeBanner: false,
       routerConfig: _mobileRouter,
       builder: (context, child) {

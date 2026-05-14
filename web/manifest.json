@@ -1,11 +1,11 @@
 {
-    "name": "MyFiny",
-    "short_name": "MyFiny",
+    "name": "BaoThe",
+    "short_name": "BaoThe",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Công cụ so sánh và quản lý thẻ tín dụng thông minh.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

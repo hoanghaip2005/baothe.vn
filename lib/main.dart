@@ -14,25 +14,16 @@ import 'src/mobile/app_mobile.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  
-  runApp(
-    const ProviderScope(
-      child: kIsWeb ? MyApp() : AppMobile(),
-    ),
-  );
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  runApp(const ProviderScope(child: kIsWeb ? MyApp() : AppMobile()));
 }
 
 final _router = GoRouter(
   initialLocation: '/',
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const HomeScreen(),
-    ),
+    GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
     GoRoute(
       path: '/calculator',
       builder: (context, state) => const CalculatorScreen(),
@@ -48,10 +39,7 @@ final _router = GoRouter(
       path: '/compare',
       builder: (context, state) => const ComparisonScreen(),
     ),
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const LoginScreen(),
-    ),
+    GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
   ],
 );
 
@@ -61,7 +49,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'MyFiny',
+      title: 'BaoThe',
       debugShowCheckedModeBanner: false,
       routerConfig: _router,
       theme: ThemeData(
@@ -81,10 +69,10 @@ class MyApp extends StatelessWidget {
           titleTextStyle: AppStyles.h2,
         ),
         textTheme: Theme.of(context).textTheme.apply(
-              fontFamily: AppStyles.fontFamily,
-              bodyColor: AppColors.textPrimary,
-              displayColor: AppColors.textPrimary,
-            ),
+          fontFamily: AppStyles.fontFamily,
+          bodyColor: AppColors.textPrimary,
+          displayColor: AppColors.textPrimary,
+        ),
         useMaterial3: true,
       ),
     );

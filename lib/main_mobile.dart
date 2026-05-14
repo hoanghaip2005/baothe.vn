@@ -23,21 +23,17 @@ void main() async {
     debugPrint('❌ CRITICAL ASYNC ERROR:');
     debugPrint('Cause: $error');
     debugPrint('Stack trace: $stack');
-    return true; 
+    return true;
   };
 
   try {
-    debugPrint('🚀 Đang khởi tạo MyFiny Mobile...');
-    
+    debugPrint('Đang khởi tạo BaoThe Mobile...');
+
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    
-    runApp(
-      const ProviderScope(
-        child: AppMobile(),
-      ),
-    );
+
+    runApp(const ProviderScope(child: AppMobile()));
   } catch (e, stack) {
     debugPrint('❌ INITIALIZATION FAILED: $e');
     debugPrint(stack.toString());

@@ -1,6 +1,6 @@
 # Hướng dẫn release iOS lên App Store Connect bằng Xcode Cloud
 
-Cập nhật: 2026-05-10
+Cập nhật: 2026-05-14
 
 Tài liệu này dành cho dự án Flutter `baothe_vn`, sau khi app đã chạy ổn trên simulator và cần chuẩn bị luồng release iOS qua App Store Connect, TestFlight và Xcode Cloud.
 
@@ -13,15 +13,15 @@ Tài liệu này dành cho dự án Flutter `baothe_vn`, sau khi app đã chạy
 | Scheme | `Runner` |
 | Bundle ID | `com.baothe.app` |
 | Apple Team ID trong project | `5MNN7PQYBD` |
-| Version hiện tại | `1.0.0+1` trong `pubspec.yaml` |
+| Version hiện tại | `1.0.0+7` trong `pubspec.yaml` |
 | App Store Connect app | `BaoThe`, Apple ID `6763936547`, SKU `baothevn-ios` |
-| Display name | `MyFiny` trong `Info.plist`, `My Finy` trong Xcode build setting |
+| Display name | `BaoThe` trong `Info.plist` và Xcode build setting |
 | iOS deployment target | `15.0` trong `Podfile`, một số setting của Runner đang là `16.6` |
 | Capability đang dùng | Push Notifications, Sign in with Apple |
 
 Trước khi upload bản đầu tiên, nên chốt lại 3 điểm:
 
-1. Tên app hiển thị trên máy và tên trên App Store sẽ dùng `MyFiny`, `My Finy` hay tên thương hiệu khác.
+1. Tên app hiển thị trên máy và tên trên App Store dùng thống nhất `BaoThe`.
 2. Minimum iOS support là `15.0` hay `16.6`; nên chỉnh đồng nhất trong Xcode target Runner và `ios/Podfile`.
 3. Bundle ID `com.baothe.app` phải trùng trong Apple Developer, App Store Connect, Firebase iOS app và Xcode project.
 
@@ -29,7 +29,7 @@ Trước khi upload bản đầu tiên, nên chốt lại 3 điểm:
 
 Cần có tài khoản Apple Developer Program đang hoạt động. Nếu chỉ có Apple ID thường thì có thể chạy simulator/local device ở mức giới hạn, nhưng không upload App Store/TestFlight qua App Store Connect được.
 
-Cần quyền phù hợp trong App Store Connect. Tối thiểu nên có quyền `Admin`, `App Manager` hoặc quyền được cấp cho app `MyFiny` để tạo app record, cấu hình TestFlight và gửi review.
+Cần quyền phù hợp trong App Store Connect. Tối thiểu nên có quyền `Admin`, `App Manager` hoặc quyền được cấp cho app `BaoThe` để tạo app record, cấu hình TestFlight và gửi review.
 
 Cần repository Git đã push lên remote mà Xcode Cloud truy cập được. Repo hiện tại đang trỏ tới:
 

@@ -27,7 +27,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Future<void> _submit() async {
     setState(() => _isLoading = true);
     final auth = ref.read(authServiceProvider);
-    
+
     try {
       if (_isLogin) {
         await auth.signIn(_emailController.text, _passwordController.text);
@@ -38,7 +38,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Lỗi: ${e.toString()}'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('Lỗi: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {
@@ -74,9 +77,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  _isLogin 
-                    ? 'Đăng nhập để quản lý thẻ và ưu đãi của bạn' 
-                    : 'Tham gia cộng đồng MyFiny ngay hôm nay',
+                  _isLogin
+                      ? 'Đăng nhập để quản lý thẻ và ưu đãi của bạn'
+                      : 'Tham gia cộng đồng BaoThe ngay hôm nay',
                   style: AppStyles.labelSmall,
                   textAlign: TextAlign.center,
                 ),
@@ -92,14 +95,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     onPressed: _isLoading ? null : _submit,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                    child: _isLoading 
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : Text(
-                          _isLogin ? 'Đăng nhập' : 'Đăng ký', 
-                          style: AppStyles.buttonText
-                        ),
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                            _isLogin ? 'Đăng nhập' : 'Đăng ký',
+                            style: AppStyles.buttonText,
+                          ),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -111,7 +116,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       onPressed: () => setState(() => _isLogin = !_isLogin),
                       child: Text(
                         _isLogin ? 'Đăng ký ngay' : 'Đăng nhập',
-                        style: const TextStyle(color: AppColors.accentOrange, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          color: AppColors.accentOrange,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
@@ -119,7 +127,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 20),
                 TextButton(
                   onPressed: () => context.go('/'),
-                  child: const Text('Về trang chủ', style: TextStyle(color: AppColors.textLight)),
+                  child: const Text(
+                    'Về trang chủ',
+                    style: TextStyle(color: AppColors.textLight),
+                  ),
                 ),
               ],
             ),
@@ -129,11 +140,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, bool isPassword) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller,
+    bool isPassword,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppStyles.labelSmall.copyWith(fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+        Text(
+          label,
+          style: AppStyles.labelSmall.copyWith(
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary,
+          ),
+        ),
         const SizedBox(height: 8),
         TextField(
           controller: controller,
@@ -148,7 +169,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.accentOrange, width: 1.5),
+              borderSide: const BorderSide(
+                color: AppColors.accentOrange,
+                width: 1.5,
+              ),
             ),
           ),
         ),

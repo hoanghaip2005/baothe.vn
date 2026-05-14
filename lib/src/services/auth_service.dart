@@ -118,10 +118,21 @@ class AuthService {
             nonce: nonce,
           );
 
-      final OAuthProvider oAuthProvider = OAuthProvider('apple.com');
-      final AuthCredential credential = oAuthProvider.credential(
-        idToken: appleCredential.identityToken,
-        rawNonce: rawNonce,
+      final identityToken = appleCredential.identityToken;
+      if (identityToken == null || identityToken.isEmpty) {
+        throw FirebaseAuthException(
+          code: 'missing-apple-id-token',
+          message: 'Apple did not return an identity token.',
+        );
+      }
+
+      final AuthCredential credential = AppleAuthProvider.credentialWithIDToken(
+        identityToken,
+        rawNonce,
+        AppleFullPersonName(
+          givenName: appleCredential.givenName,
+          familyName: appleCredential.familyName,
+        ),
       );
 
       final userCredential = await _auth.signInWithCredential(credential);

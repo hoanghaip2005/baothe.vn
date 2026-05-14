@@ -70,10 +70,8 @@ class _MobileLoginScreenState extends ConsumerState<MobileLoginScreen> {
       body: Stack(
         children: [
           // 1. Animated Card Background
-          const Positioned.fill(
-            child: _AnimatedCardBackground(),
-          ),
-          
+          const Positioned.fill(child: _AnimatedCardBackground()),
+
           // 2. Gradient Overlay to make text and buttons readable
           Positioned.fill(
             child: Container(
@@ -92,7 +90,7 @@ class _MobileLoginScreenState extends ConsumerState<MobileLoginScreen> {
               ),
             ),
           ),
-          
+
           // 3. Foreground Content
           SafeArea(
             child: Padding(
@@ -102,15 +100,16 @@ class _MobileLoginScreenState extends ConsumerState<MobileLoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Spacer(),
-                  
+
                   // Logo
                   Image.asset(
-                    'assets/logo/logo_login.png',
-                    height: 80,
+                    'assets/logo/baothevn.png',
+                    width: 220,
+                    fit: BoxFit.contain,
                   ).animate().fadeIn(duration: 800.ms).scale(delay: 200.ms),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Title
                   Text(
                     'So Sánh & Quản Lý\nThẻ Tín Dụng',
@@ -122,9 +121,9 @@ class _MobileLoginScreenState extends ConsumerState<MobileLoginScreen> {
                       height: 1.2,
                     ),
                   ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.2),
-                  
+
                   const SizedBox(height: 12),
-                  
+
                   // Subtitle
                   Text(
                     'Tìm thẻ tốt nhất và tối ưu hóa chi tiêu của bạn.',
@@ -134,9 +133,9 @@ class _MobileLoginScreenState extends ConsumerState<MobileLoginScreen> {
                       color: AppColors.textSecondary,
                     ),
                   ).animate().fadeIn(delay: 500.ms).slideY(begin: 0.2),
-                  
+
                   const SizedBox(height: 40),
-                  
+
                   // Social Login Buttons
                   if (isIOS) ...[
                     _LoginButton(
@@ -148,18 +147,21 @@ class _MobileLoginScreenState extends ConsumerState<MobileLoginScreen> {
                     ).animate().fadeIn(delay: 600.ms).slideY(begin: 0.1),
                     const SizedBox(height: 16),
                   ],
-                  
+
                   _LoginButton(
-                    customIcon: Image.asset('assets/logo/google_logo.png', height: 24),
+                    customIcon: Image.asset(
+                      'assets/logo/google_logo.png',
+                      height: 24,
+                    ),
                     label: 'Tiếp tục với Google',
                     backgroundColor: Colors.white,
                     textColor: AppColors.textPrimary,
                     borderColor: const Color(0xFFE5E7EB),
                     onPressed: _isLoading ? () {} : _handleGoogleSignIn,
                   ).animate().fadeIn(delay: 700.ms).slideY(begin: 0.1),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   _LoginButton(
                     icon: Icons.email_outlined,
                     label: 'Tiếp tục với Email',
@@ -167,16 +169,19 @@ class _MobileLoginScreenState extends ConsumerState<MobileLoginScreen> {
                     textColor: Colors.white,
                     onPressed: () => context.push('/login-email'),
                   ).animate().fadeIn(delay: 800.ms).slideY(begin: 0.1),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Footer
                   TextButton(
                     onPressed: () => context.push('/register'),
                     child: RichText(
                       text: TextSpan(
                         text: 'Chưa có tài khoản? ',
-                        style: GoogleFonts.inter(color: AppColors.textSecondary, fontSize: 14),
+                        style: GoogleFonts.inter(
+                          color: AppColors.textSecondary,
+                          fontSize: 14,
+                        ),
                         children: [
                           TextSpan(
                             text: 'Đăng ký ngay',
@@ -197,7 +202,9 @@ class _MobileLoginScreenState extends ConsumerState<MobileLoginScreen> {
             Container(
               color: Colors.black.withValues(alpha: 0.3),
               child: const Center(
-                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary)),
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                ),
               ),
             ),
         ],
@@ -238,7 +245,9 @@ class _LoginButton extends StatelessWidget {
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
-            side: borderColor != null ? BorderSide(color: borderColor!, width: 1.5) : BorderSide.none,
+            side: borderColor != null
+                ? BorderSide(color: borderColor!, width: 1.5)
+                : BorderSide.none,
           ),
         ),
         child: Row(
@@ -246,13 +255,20 @@ class _LoginButton extends StatelessWidget {
           children: [
             ?customIcon,
             if (icon != null) ...[
-              if (icon is IconData) 
+              if (icon is IconData)
                 Icon(icon as IconData, size: 24, color: textColor)
               else
                 FaIcon(icon, size: 24, color: textColor),
             ],
             const SizedBox(width: 12),
-            Text(label, style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600, color: textColor)),
+            Text(
+              label,
+              style: GoogleFonts.inter(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: textColor,
+              ),
+            ),
           ],
         ),
       ),
@@ -266,10 +282,12 @@ class _AnimatedCardBackground extends StatefulWidget {
   const _AnimatedCardBackground();
 
   @override
-  State<_AnimatedCardBackground> createState() => _AnimatedCardBackgroundState();
+  State<_AnimatedCardBackground> createState() =>
+      _AnimatedCardBackgroundState();
 }
 
-class _AnimatedCardBackgroundState extends State<_AnimatedCardBackground> with SingleTickerProviderStateMixin {
+class _AnimatedCardBackgroundState extends State<_AnimatedCardBackground>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -300,38 +318,28 @@ class _AnimatedCardBackgroundState extends State<_AnimatedCardBackground> with S
             final scrollOffset = _controller.value * 2000.0;
 
             final colWidth = (constraints.maxWidth - 32) / 3;
-            
+
             return Stack(
               children: [
                 // Column 1 (Left) - moves up normal speed
                 Positioned(
                   left: 0,
                   top: -scrollOffset,
-                  child: _CardColumn(
-                    seed: 1,
-                    cardCount: 20,
-                    width: colWidth,
-                  ),
+                  child: _CardColumn(seed: 1, cardCount: 20, width: colWidth),
                 ),
                 // Column 2 (Center) - moves up slightly faster, offset starts differently
                 Positioned(
                   left: colWidth + 16,
-                  top: -(scrollOffset * 1.2) - 100, // Starts a bit higher and moves faster
-                  child: _CardColumn(
-                    seed: 2,
-                    cardCount: 25,
-                    width: colWidth,
-                  ),
+                  top:
+                      -(scrollOffset * 1.2) -
+                      100, // Starts a bit higher and moves faster
+                  child: _CardColumn(seed: 2, cardCount: 25, width: colWidth),
                 ),
                 // Column 3 (Right) - moves up slightly slower
                 Positioned(
                   left: (colWidth * 2) + 32,
                   top: -(scrollOffset * 0.8),
-                  child: _CardColumn(
-                    seed: 3,
-                    cardCount: 20,
-                    width: colWidth,
-                  ),
+                  child: _CardColumn(seed: 3, cardCount: 20, width: colWidth),
                 ),
               ],
             );
@@ -359,7 +367,7 @@ class _CardColumn extends StatefulWidget {
 
 class _CardColumnState extends State<_CardColumn> {
   late List<String> _selectedImages;
-  
+
   final List<String> _cardImages = [
     'acb_the_acb_express.png',
     'acb_the_acb_jcb_gold.png',
@@ -389,11 +397,12 @@ class _CardColumnState extends State<_CardColumn> {
   Widget build(BuildContext context) {
     return Column(
       children: _selectedImages.map((imageName) {
-        final imageUrl = 'https://storage.googleapis.com/baothevn-790c6.firebasestorage.app/card_images/$imageName';
+        final imageUrl =
+            'https://storage.googleapis.com/baothevn-790c6.firebasestorage.app/card_images/$imageName';
         // Typical credit card ratio is around 1.58.
         // For a vertical display, height is width * 1.58.
         final cardHeight = widget.width * 1.58;
-        
+
         return Container(
           width: widget.width,
           height: cardHeight,
@@ -418,7 +427,9 @@ class _CardColumnState extends State<_CardColumn> {
                 child: const Center(
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.primary,
+                    ),
                   ),
                 ),
               ),
